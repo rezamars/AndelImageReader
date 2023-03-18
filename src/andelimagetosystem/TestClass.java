@@ -70,7 +70,7 @@ public class TestClass {
 		 //Mat img = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\testtips-13.jpg", Imgcodecs.IMREAD_COLOR);
 		
 		 //Mat img = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips-7.jpg", Imgcodecs.IMREAD_COLOR);
-		 Mat img = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips.jpg", Imgcodecs.IMREAD_COLOR);
+		 Mat img = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips-7.jpg", Imgcodecs.IMREAD_COLOR);
 		 
 		    if(img.empty())
 				try {
@@ -252,7 +252,7 @@ public class TestClass {
 	            //Drawing a Rectangle
 	            Point point1 = maxp;
 	            Point point2 = new Point((maxp.x+450) + tpl.cols(),
-	                    (maxp.y+1.99999999999991484) + tpl.rows());// change maxp.+1.99999... to lower or higher slice-height
+	                    (maxp.y+0) + tpl.rows());// change maxp.+1.99999999999991484587 to lower or higher slice-height
 	            Scalar color = new Scalar(0, 0, 0);
 	            int thickness = -1;
 	            //Imgproc.rectangle (result, point1, point2, color, thickness);
@@ -408,6 +408,7 @@ public class TestClass {
 		// Setting Chrome as an agent
         //System.setProperty("http.agent", "Chrome");
 
+        /*
         // reading the original image file
         //File file = new File("https://www.educative.io/api/edpresso/shot/5120209133764608/image/5075298506244096/test.jpg");
         File file = new File("C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips-6.jpg");
@@ -418,7 +419,7 @@ public class TestClass {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-        
+        */
         /*
         // reading the file from a URL
         URL url;
@@ -447,7 +448,9 @@ public class TestClass {
 
         // Equally dividing original image into subimages
         int subimage_Width = (theRectangleCutImage.getWidth() / columns);
-        int subimage_Height = theRectangleCutImage.getHeight() / rows;
+        double subimage_Height = theRectangleCutImage.getHeight() / rows;
+        
+        System.out.println("The height is: " + subimage_Height);
         
         int current_img = 0;
         
@@ -457,18 +460,27 @@ public class TestClass {
             for (int j = 0; j < columns; j++)
             {
                 // Creating sub image
-                imgs[current_img] = new BufferedImage(subimage_Width, subimage_Height, theRectangleCutImage.getType());
+                imgs[current_img] = new BufferedImage(subimage_Width, (int)subimage_Height, theRectangleCutImage.getType());
                 Graphics2D img_creator = imgs[current_img].createGraphics();
 
+                if((i == 6) && (subimage_Height == 50)){
+                    subimage_Height = subimage_Height + (0.25);
+                }
+                else if((i == 6) && (subimage_Height >= 51)){
+                    //subimage_Height = subimage_Height - (0.05);
+                }
+                
                 // coordinates of source image
                 int src_first_x = subimage_Width * j;
-                int src_first_y = subimage_Height * i;
+                double src_first_y = subimage_Height * i;
 
                 // coordinates of sub-image
                 int dst_corner_x = subimage_Width * j + subimage_Width;
-                int dst_corner_y = subimage_Height * i + subimage_Height;
+                double dst_corner_y = subimage_Height * i + subimage_Height;
                 
-                img_creator.drawImage(theRectangleCutImage, 0, 0, subimage_Width, subimage_Height, src_first_x, src_first_y, dst_corner_x, dst_corner_y, null);
+                
+                
+                img_creator.drawImage(theRectangleCutImage, 0, 0, subimage_Width, (int)subimage_Height, src_first_x, (int)src_first_y, dst_corner_x, (int)dst_corner_y, null);
                 current_img++;
             }
         }
