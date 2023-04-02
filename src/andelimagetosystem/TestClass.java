@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -56,8 +58,8 @@ import org.opencv.imgproc.Imgproc;
  */
 public class TestClass {
     
-    Label imgDisplay = new Label();
-	Label imgSliceDis[] = new Label[13];
+        public Label imgDisplay = new Label();
+	public Label imgSliceDis[] = new Label[13];
 	BufferedImage imgs[] = new BufferedImage[13];
         BufferedImage theRectangleCutImage;
         private Stage primaryStage;
@@ -70,7 +72,7 @@ public class TestClass {
 		 //Mat img = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\testtips-13.jpg", Imgcodecs.IMREAD_COLOR);
 		
 		 //Mat img = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips-7.jpg", Imgcodecs.IMREAD_COLOR);
-		 Mat img = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips-7.jpg", Imgcodecs.IMREAD_COLOR);
+		 Mat img = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips-1.jpg", Imgcodecs.IMREAD_COLOR);
 		 
 		    if(img.empty())
 				try {
@@ -157,6 +159,8 @@ public class TestClass {
 	    
 	    createStage();
 	    slice();
+            checkPatternsOfSlices();
+            
 	}
 	
 	public void drawRecOverMatches(Mat tpl, Mat img){
@@ -570,4 +574,129 @@ public class TestClass {
 	    return Imgcodecs.imdecode(new MatOfByte(byteArrayOutputStream.toByteArray()), Imgcodecs.IMREAD_UNCHANGED);
 	}
     
+        public void checkPatternsOfSlices() {
+            
+            //Mat img = Imgcodecs.imread(imgs[0], Imgcodecs.IMREAD_COLOR);
+            //Mat image = HighGui.toBufferedImage("faces/s1/1.pgm", 0);
+            Mat[] imgMat = new Mat[13];
+            
+            for(int imgMatIndex = 0 ; imgMatIndex < 13 ; imgMatIndex++){
+                try {
+                imgMat[imgMatIndex] = BufferedImage2Mat(imgs[imgMatIndex]);
+                } catch (IOException ex) {
+                Logger.getLogger(TestClass.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            
+            Mat mat1 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-1.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat2 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-2.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat3 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-3.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            //Mat mat4 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-4.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat5 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-5.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            //Mat mat6 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1sign-6.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            
+            
+            for(int imgMatIndex = 0 ; imgMatIndex < 13 ; imgMatIndex++){
+                if(imgMat[imgMatIndex] != null){
+                    drawRecOverSignsMatch(mat1, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat2, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat3, imgMat[imgMatIndex], imgMatIndex);
+                    //drawRecOverSignsMatch(mat4, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat5, imgMat[imgMatIndex], imgMatIndex);
+                    //drawRecOverSignsMatch(mat6, imgMat);
+                }
+            
+            
+            }
+        }
+        
+        public void drawRecOverSignsMatch(Mat tpl, Mat img, int matIndex){
+		
+	    
+	    if(tpl.empty())
+			try {
+				throw new Exception("no template");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    
+	    Mat result = new Mat();
+	    Imgproc.matchTemplate(img, tpl,result,Imgproc.TM_CCOEFF_NORMED);//Template Matching
+	    //Imgproc.matchTemplate(img, tpl2,result,Imgproc.TM_CCOEFF_NORMED);//Template Matching
+	    
+	    Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);  
+	    double threshold = 0.95;
+	    double maxval;
+	    Mat dst;
+	    int q = 1;
+	    
+	    //while(true) 
+	    //while(q == 1) 	
+	    //{
+	        Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
+	        Point maxp = maxr.maxLoc;
+	        maxval = maxr.maxVal;
+	        Point maxop = new Point(maxp.x + tpl.width(), maxp.y + tpl.height());
+	        dst = img.clone();
+	        
+	        if(maxval >= threshold)
+	        {
+	            System.out.println("in drawRecOverSignsMatch...");
+
+	            Imgproc.rectangle(img, maxp, new Point((maxp.x) + tpl.cols(),
+	                    (maxp.y+0) + tpl.rows()), new Scalar(0, 0, 0),2);
+	            
+	            
+	            //Drawing a Rectangle
+	            Point point1 = maxp;
+	            Point point2 = new Point((maxp.x) + tpl.cols(),
+	                    (maxp.y+0) + tpl.rows());// change maxp.+1.99999999999991484587 to lower or higher slice-height
+	            Scalar color = new Scalar(0, 0, 0);
+	            int thickness = -1;
+	            
+                    //Imgcodecs.imwrite("C:\\Users\\Reza\\Desktop\\output.jpg", img);//save image
+                    
+                try {
+ 
+                    imgs[matIndex] = Mat2BufferedImage(img);
+                } catch (IOException ex) {
+                    Logger.getLogger(TestClass.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                }
+                fillMatchesInSlices();
+            //}
+        }
+        
+        public void fillMatchesInSlices(){
+            
+            for(int x = 0 ; x < 13 ; x++){
+        	//ImageIcon sliceIcon = new ImageIcon(imgs[x]);
+    	    //imgSliceDis[x].setIcon(sliceIcon);
+            
+            javafx.scene.image.Image fXimage;
+            fXimage = SwingFXUtils.toFXImage((BufferedImage) imgs[x], null);
+        
+            ImageView imageView = new ImageView();
+            imageView.setFitHeight(25);
+            imageView.setFitWidth(300);
+            imageView.setImage(fXimage);
+            imgSliceDis[x].setGraphic(imageView);
+            
+            }
+            
+        }
+        
+        public static BufferedImage Mat2BufferedImage(Mat mat) throws IOException{
+            //Encoding the image
+            MatOfByte matOfByte = new MatOfByte();
+            Imgcodecs.imencode(".jpg", mat, matOfByte);
+            //Storing the encoded Mat in a byte array
+            byte[] byteArray = matOfByte.toArray();
+            //Preparing the Buffered Image
+            InputStream in = new ByteArrayInputStream(byteArray);
+            BufferedImage bufImage = ImageIO.read(in);
+            return bufImage;
+   }
 }
