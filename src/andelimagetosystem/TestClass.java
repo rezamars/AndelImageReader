@@ -120,11 +120,15 @@ public class TestClass {
 		
 		 //Mat img = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips-7.jpg", Imgcodecs.IMREAD_COLOR);
                  
-                 filePath = "C:\\Users\\Reza\\Desktop\\testtips-filer\\stryktips-1.jpg";
-                 //filePath = "C:\\Users\\Reza\\Desktop\\testing-image-changeDPI\\stryktips-1.jpg";
+                 filePath = "C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips-2.jpg";
+                 //filePath = "C:\\Users\\Reza\\Desktop\\testtips-filer\\stryktips-12.jpg";
+                 //filePath = "C:\\Users\\Reza\\Desktop\\testing-image-changeDPI\\stryktips-1-changed.jpg";
                  
-		 Mat img = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
+		 //Mat imgOrg = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_ANYCOLOR);
+                 Mat img = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_GRAYSCALE);
 		 
+                 //Mat img = makeCouponImageGrayScale(imgOrg);
+                 
 		    if(img.empty())
 				try {
 					throw new Exception("no image");
@@ -133,8 +137,10 @@ public class TestClass {
 					e.printStackTrace();
 				};
                                 
-		testGrayScaleCouponImage(img);
-                testMatchGrayscale();
+		//testGrayScaleCouponImage(img);
+                //testMatchGrayscale();
+                
+                //printCouponImageGrayScale(img);
                     
 		/*    
 		Mat tpl = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1sign-1.jpg", Imgcodecs.IMREAD_COLOR);//template image
@@ -163,11 +169,11 @@ public class TestClass {
 		*/
 		
                 
-		Mat tpl8 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(1).jpg", Imgcodecs.IMREAD_COLOR);//template image
-		Mat tpl9 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(2).jpg", Imgcodecs.IMREAD_COLOR);//template image
-		Mat tpl10 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(3).jpg", Imgcodecs.IMREAD_COLOR);//template image
-		Mat tpl11 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(4).jpg", Imgcodecs.IMREAD_COLOR);//template image
-		Mat tpl12 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(5).jpg", Imgcodecs.IMREAD_COLOR);//template image
+		Mat tpl8 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(1).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+		Mat tpl9 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(2).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+		Mat tpl10 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(3).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+		Mat tpl11 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(4).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+		Mat tpl12 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(5).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
 		
 		
 		//drawRecOverMatches(tpl8, img);
@@ -231,54 +237,7 @@ public class TestClass {
             //testNewRonaldoTemplateMatching();
 	}
 	
-        /*
-	public void drawRecOverMatches(Mat tpl, Mat img){
-		
-		    
-		    if(tpl.empty())
-				try {
-					throw new Exception("no template");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		    
-		    Mat result = new Mat();
-		    Imgproc.matchTemplate(img, tpl,result,Imgproc.TM_CCOEFF_NORMED);//Template Matching
-		    //Imgproc.matchTemplate(img, tpl2,result,Imgproc.TM_CCOEFF_NORMED);//Template Matching
-		    
-		    Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);  
-		    double threshold = 0.95;
-		    double maxval;
-		    Mat dst;
-		    while(true) 
-		    {
-		        Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
-		        Point maxp = maxr.maxLoc;
-		        maxval = maxr.maxVal;
-		        Point maxop = new Point(maxp.x + tpl.width(), maxp.y + tpl.height());
-		        dst = img.clone();
-		        if(maxval >= threshold)
-		        {
-		            System.out.println("Template Matches with input image");
-
-		            Imgproc.rectangle(img, maxp, new Point(maxp.x + tpl.cols(),
-		                    maxp.y + tpl.rows()), new Scalar(0, 0, 0),2);
-		            Imgproc.rectangle(result, maxp, new Point(maxp.x + tpl.cols(),
-		                    maxp.y + tpl.rows()), new Scalar(0, 255, 0),-1);
-		           
-		            
-		        }else{
-		            break;
-		        }
-		    }
-		    
-		    //Imgcodecs.imwrite("C:\\Users\\Reza\\Desktop\\output.jpg", dst);//save image
-		    
-		
-	}
-        */
-	
+        	
 	public void cutRecOver1To13Match(Mat tpl, Mat img){
 		
 	    
@@ -316,35 +275,13 @@ public class TestClass {
 	            Imgproc.rectangle(img, maxp, new Point((maxp.x+450) + tpl.cols(),
 	                    (maxp.y+0) + tpl.rows()), new Scalar(0, 0, 0),2);
 	            
-	            //Rect rect = new Rect((int) (maxp.x + tpl.cols()), 
-	            	//	(int) (maxp.y + tpl.rows()), 0, 0); // 8 and 14 are the smallerst x and y
-	            //Imgproc.rectangle(result,rect,new Scalar(0, 255, 0),-1);
 	            
-	            
-	          //Reading the source image in to a Mat object
-	            //Mat src = Imgcodecs.imread("D:\images\blank.jpg");
-	            //Drawing a Rectangle
 	            Point point1 = maxp;
 	            Point point2 = new Point((maxp.x+450) + tpl.cols(),
 	                    (maxp.y+0) + tpl.rows());// change maxp.+1.99999999999991484587 to lower or higher slice-height
 	            Scalar color = new Scalar(0, 0, 0);
 	            int thickness = -1;
-	            //Imgproc.rectangle (result, point1, point2, color, thickness);
-	            
-	            /*
-	            Rectangle2D rect2D ;
-	            rect2D.add(1, 2);(point1,point2);
-	            Rectangle rect= new Rectangle();
-	            rect.setFrameFromDiagonal(new (Point point1, point2);
-	            */
-	            
-	            //MatOfPoint currentContour = point2;
-	            //Rect rectangle = Imgproc.boundingRect(result);
-	            //Imgproc.rectangle(result, rectangle.tl(), rectangle.br(), new Scalar(255,0,0),1);
-	            
-	            //Imgproc.rectangle(result, maxp, new Point(maxp.x + tpl.cols(),
-	              //      maxp.y + tpl.rows()), new Scalar(0, 255, 0),-1);
-	           
+	            	           
 	            
 	          //Encoding the image
 	            MatOfByte matOfByte = new MatOfByte();
@@ -369,14 +306,24 @@ public class TestClass {
                         theRectangleCutImage = (BufferedImage) HighGui.toBufferedImage(newMatImage);
                         
                         System.out.println("ORG----theRectangleCutImage.getHeight(): " + theRectangleCutImage.getHeight());
+                        System.out.println("ORG----theRectangleCutImage.getWidth(): " + theRectangleCutImage.getWidth());
                         
                         if(theRectangleCutImage.getHeight() < 660){
-                            
-                            Image newResizedImage = theRectangleCutImage.getScaledInstance(theRectangleCutImage.getWidth(),660, Image.SCALE_SMOOTH);
+                            int heightDifference = 660 - theRectangleCutImage.getHeight();
+                            //System.out.println("aaaaaaaaaaa- heightDifference= " + heightDifference );
+                            double imageAddingHeightProcentage = (Double.valueOf(heightDifference)/theRectangleCutImage.getHeight());
+                            //System.out.println("aaaaaaaaaaa- imageAddingHeightProcentage= " + imageAddingHeightProcentage );
+                            double theWidthProcentageMultiplier = (1 + imageAddingHeightProcentage);
+                            //System.out.println("aaaaaaaaaa- theWidthProcentageMultiplier= " + theWidthProcentageMultiplier );
+                            double theRectangleCutImageNewWidthDouble = (theWidthProcentageMultiplier * theRectangleCutImage.getWidth()) ;
+                            int theRectangleCutImageNewWidthInt = (int)theRectangleCutImageNewWidthDouble;
+                            //System.out.println("aaaaaaaaaaa- theRectangleCutImageNewWidthInt= " + theRectangleCutImageNewWidthInt );                   
+                            Image newResizedImage = theRectangleCutImage.getScaledInstance( theRectangleCutImageNewWidthInt ,660, Image.SCALE_SMOOTH);
                             theRectangleCutImage = imageToBufferedImage(newResizedImage);
                         }
                         
                         System.out.println("NEW----theRectangleCutImage.getHeight(): " + theRectangleCutImage.getHeight());
+                        System.out.println("NEW----theRectangleCutImage.getWidth(): " + theRectangleCutImage.getWidth());
                         
 	            	//Imgcodecs.imwrite("C:\\Users\\Reza\\Desktop\\output.jpg", newMatImage);//save image
 				} catch (Exception e) {
@@ -400,33 +347,25 @@ public class TestClass {
         String title = "Source image; Control; Result image";
         
         
-        //Stage primaryStage = new Stage();
-        
-        //StackPane root = new StackPane();
-        BorderPane borderPane = new BorderPane();
+                BorderPane borderPane = new BorderPane();
         
         VBox vboxLeft = new VBox(10);
         vboxLeft.setPadding(new Insets(10, 10, 10, 15));   
         vboxLeft.setSpacing(10);
         
-        //vboxLeft.setPrefSize(100, 100);
-        //vboxLeft.setFillWidth(true);
         vboxLeft.setAlignment(Pos.TOP_CENTER);
-        //vboxLeft.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.10));
-        //Controller.primaryStage.getChildren().add(left);
+        
         vboxLeft.getChildren().add(imgDisplay);
         
         VBox vboxRight = new VBox();
         vboxRight.setPadding(new Insets(10, 10, 10, 15));   
         vboxRight.setSpacing(10);
-        //vboxRight.getChildren().add(imgDisplay);
-        //vboxRight.setPrefSize(100, 100);
+        
         vboxRight.setAlignment(Pos.TOP_CENTER);
         
         
         for(int x=0 ; x < 13 ; x++){
         	imgSliceDis[x] = new Label();
-        	//frame.add(imgSliceDis[x]);
         	vboxRight.getChildren().add(imgSliceDis[x]);
         }
         
@@ -448,29 +387,7 @@ public class TestClass {
         // initalizing rows and columns
         int rows = 13;
         int columns = 1;
-
-        // initializing array to hold subimages
-        //BufferedImage imgs[] = new BufferedImage[13];
-
-        
-        //System.out.println("ORG----theRectangleCutImage.getHeight(): " + theRectangleCutImage.getHeight());
-        
-        //if(theRectangleCutImage.getHeight() < 660){
-            
-            //theRectangleCutImage = addHeightToImage(theRectangleCutImage,theRectangleCutImage.getWidth());
-            /*
-            try {
-                theRectangleCutImage = resize(theRectangleCutImage,theRectangleCutImage.getWidth(), 660);
-            } catch (IOException ex) {
-                Logger.getLogger(TestClass.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            */
-            //Image newResizedImage = theRectangleCutImage.getScaledInstance(theRectangleCutImage.getWidth(), 660, Image.SCALE_SMOOTH);
-            //theRectangleCutImage = imageToBufferedImage(newResizedImage);
-        //}
-        
-        //System.out.println("NEW----theRectangleCutImage.getHeight(): " + theRectangleCutImage.getHeight());
-        
+      
         // Equally dividing original image into subimages
         int subimage_Width = (theRectangleCutImage.getWidth() / columns);
         double subimage_Height = theRectangleCutImage.getHeight() / rows;
@@ -523,7 +440,8 @@ public class TestClass {
                 current_img++;
             }
         }
-
+         
+        
         /*
         //writing sub-images into image files
         for (int i = 0; i < 13; i++)
@@ -558,6 +476,8 @@ public class TestClass {
         }
         
         System.out.println("Sub-images have been created.");
+            
+        //printSelectedSliceOnDesktop(imgs[1]);
     }
 		
 	public BufferedImage cropImage(BufferedImage image, Point point1, Point point2)
@@ -566,27 +486,15 @@ public class TestClass {
         /* 
          * Create the return image
          */
-        //BufferedImage retval = createImage(clip.width, clip.height);
         BufferedImage retval = createImage(((int)point2.x) -((int)point1.x), ((int)point2.y)-((int)point1.y));
         Graphics2D g2 = retval.createGraphics();
 
-        
-        /* 
-         * Render the clip region
-         */
-        /*g2.drawImage(
-                image.getSubimage(clip.x, clip.y, clip.width, clip.height),
-                0, 0, null);*/
-        
-        //g2.setColor(java.awt.Color.black);
         
         g2.drawImage(
                 image.getSubimage((int)point1.x, (int)point1.y, 
                 		((int)point2.x) -((int)point1.x), ((int)point2.y)-((int)point1.y)),
                 0, 0, null);
-        
-        //g2.setColor(java.awt.Color.black);
-        
+                
         g2.dispose();
         retval.flush();
 
@@ -605,7 +513,8 @@ public class TestClass {
 	    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 	    ImageIO.write(image, "jpg", byteArrayOutputStream);
 	    byteArrayOutputStream.flush();
-	    return Imgcodecs.imdecode(new MatOfByte(byteArrayOutputStream.toByteArray()), Imgcodecs.IMREAD_UNCHANGED);
+	    //return Imgcodecs.imdecode(new MatOfByte(byteArrayOutputStream.toByteArray()), Imgcodecs.IMREAD_UNCHANGED);
+            return Imgcodecs.imdecode(new MatOfByte(byteArrayOutputStream.toByteArray()), Imgcodecs.IMREAD_GRAYSCALE);
 	}
         
         public void checkPatternsOfSlices() {
@@ -623,24 +532,50 @@ public class TestClass {
             }
             
             
-            Mat mat1 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-1.jpg", Imgcodecs.IMREAD_COLOR);//template image
-            Mat mat2 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-2.jpg", Imgcodecs.IMREAD_COLOR);//template image
-            Mat mat3 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-3.jpg", Imgcodecs.IMREAD_COLOR);//template image
-            Mat mat4 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-4.jpg", Imgcodecs.IMREAD_COLOR);//template image
-            Mat mat5 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-5.jpg", Imgcodecs.IMREAD_COLOR);//template image
-            //Mat mat6 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-6.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat1 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-1.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat2 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-2.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat3 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-3.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat4 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-4.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat5 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-5.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat6 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-6.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat7 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-7.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat8 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-8.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
             
+            Mat mat9 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-9.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
             
             for(int imgMatIndex = 0 ; imgMatIndex < 13 ; imgMatIndex++){
                 if(imgMat[imgMatIndex] != null){
+                    
                     drawRecOverSignsMatch(mat1, imgMat[imgMatIndex], imgMatIndex);
                     drawRecOverSignsMatch(mat2, imgMat[imgMatIndex], imgMatIndex);
                     drawRecOverSignsMatch(mat3, imgMat[imgMatIndex], imgMatIndex);
                     drawRecOverSignsMatch(mat4, imgMat[imgMatIndex], imgMatIndex);
                     drawRecOverSignsMatch(mat5, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat6, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat7, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat8, imgMat[imgMatIndex], imgMatIndex);
+                    
+                    drawRecOverSignsMatch(mat9, imgMat[imgMatIndex], imgMatIndex);
+                    
                     //drawRecOverSignsMatch(mat6, imgMat[imgMatIndex], imgMatIndex);
+                    //drawRecOverSignsMatch(mat7, imgMat[imgMatIndex], imgMatIndex,0.92);
+                    //drawRecOverSignsMatch(mat8, imgMat[imgMatIndex], imgMatIndex, 0.92);
+                    //////drawRecOverSignsMatch(mat9, imgMat[imgMatIndex], imgMatIndex, 0.95);
+                    //drawRecOverSignsMatch(mat10, imgMat[imgMatIndex], imgMatIndex, 0.925);
+                    //////drawRecOverSignsMatch(mat11, imgMat[imgMatIndex], imgMatIndex,0.955);
+                    //////drawRecOverSignsMatch(mat12, imgMat[imgMatIndex], imgMatIndex,0.95);
+                    //////drawRecOverSignsMatch(mat13, imgMat[imgMatIndex], imgMatIndex, 0.95);
+                    
+                    //drawRecOverSignsMatch(mat14, imgMat[imgMatIndex], imgMatIndex, 0.7);
+                    //drawRecOverSignsMatch(mat15, imgMat[imgMatIndex], imgMatIndex, 0.9275);
+                    
+                    //////drawRecOverSignsMatch(mat16, imgMat[imgMatIndex], imgMatIndex, 0.9225);
+                    //////drawRecOverSignsMatch(mat17, imgMat[imgMatIndex], imgMatIndex, 0.95);
+                    
+                    //////drawRecOverSignsMatch(mat18, imgMat[imgMatIndex], imgMatIndex, 0.95);
+                    
+                    //////drawRecOverSignsMatch(mat19, imgMat[imgMatIndex], imgMatIndex, 0.95);
                 }
-            
             
             }
         }
@@ -660,13 +595,16 @@ public class TestClass {
                         
 	    Mat result = new Mat();
 	    Imgproc.matchTemplate(img, tpl,result,Imgproc.TM_CCOEFF_NORMED);//Template Matching
-	    //Imgproc.matchTemplate(img, tpl2,result,Imgproc.TM_CCOEFF_NORMED);//Template Matching
+	    //Imgproc.matchTemplate(img, tpl,result,Imgproc.TM_SQDIFF_NORMED);//Template Matching
 	    
 	    Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);  
-	    double threshold = 0.96;
+            
+            //double threshold = templateSpecifikThreshold;          
+            double threshold = 0.98;           
+	    
 	    double maxval;
-	    Mat dst;
-	    int q = 1;
+	    //Mat dst;
+	    //int q = 1;
 	    
 	    //while(true) 
 	    //while(q == 1) 	
@@ -674,8 +612,8 @@ public class TestClass {
 	        Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
 	        Point maxp = maxr.maxLoc;
 	        maxval = maxr.maxVal;
-	        Point maxop = new Point(maxp.x + tpl.width(), maxp.y + tpl.height());
-	        dst = img.clone();
+	        //Point maxop = new Point(maxp.x + tpl.width(), maxp.y + tpl.height());
+	        //dst = img.clone();
                 
 	        //System.out.println("maxval= " + maxval);
                 //System.out.println("threshold= " + threshold);
@@ -684,17 +622,19 @@ public class TestClass {
 	        {
 	            System.out.println("in drawRecOverSignsMatch...");
 
+                    System.out.println("The index of slice is: " + matIndex);
+                    
 	            Imgproc.rectangle(img, maxp, new Point((maxp.x) + tpl.cols(),
 	                    (maxp.y+0) + tpl.rows()), new Scalar(0, 0, 0),2);
 	            
-	            
+	            /*
 	            //Drawing a Rectangle
 	            Point point1 = maxp;
 	            Point point2 = new Point((maxp.x) + tpl.cols(),
 	                    (maxp.y+0) + tpl.rows());// change maxp.+1.99999999999991484587 to lower or higher slice-height
 	            Scalar color = new Scalar(0, 0, 0);
 	            int thickness = -1;
-	            
+	            */
                     //Imgcodecs.imwrite("C:\\Users\\Reza\\Desktop\\output.jpg", img);//save image
                     
                 try {
@@ -869,7 +809,7 @@ public class TestClass {
         }
         */
         
-        /*      
+             
         public BufferedImage resize(BufferedImage inputBufferedImage,
             int scaledWidth, int scaledHeight)
             throws IOException {
@@ -894,7 +834,7 @@ public class TestClass {
             //ImageIO.write(outputImage, formatName, new File(outputImagePath));
             return bImage;
         }
-        */
+        
         
     public static BufferedImage imageToBufferedImage(Image img)
     {
@@ -915,6 +855,7 @@ public class TestClass {
         return bimage;
     }    
     
+    /*
     public void testNewRonaldoTemplateMatching(){
         
         // Reading the main image   
@@ -959,10 +900,11 @@ public class TestClass {
                     
                 System.out.println("At the end of testRonaldoNewTemplateMatching()");  
     }
-    
+    */
     
     public Mat tipsDST = new Mat();
     
+    /*
     public void testGrayScaleCouponImage(Mat imgSrc){
         
         tipsDST = new Mat();
@@ -971,10 +913,12 @@ public class TestClass {
         //Instantiating the Imagecodecs class
         Imgcodecs imageCodecs = new Imgcodecs();
         //Writing the image
-        imageCodecs.imwrite("C:\\Users\\Reza\\Desktop\\testing-grayscale\\colortograyscale.jpg", tipsDST);
+        imageCodecs.imwrite("C:\\Users\\Reza\\Desktop\\testing-grayscale\\colortograyscale-2.jpg", tipsDST);
         
     }
+    */
     
+    /*
     public void testMatchGrayscale(){
         
         Mat tpl1 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testing-grayscale\\1x2-1.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
@@ -1023,5 +967,83 @@ public class TestClass {
         }
         
     }
+    */
     
+    /*
+    public Mat makeCouponImageGrayScale(Mat imgSrc){
+        
+        tipsDST = new Mat();
+        //Converting the image to grey scale
+        Imgproc.cvtColor(imgSrc, tipsDST, Imgproc.COLOR_RGB2GRAY);
+        //Instantiating the Imagecodecs class
+        Imgcodecs imageCodecs = new Imgcodecs();
+        //Writing the image
+        //imageCodecs.imwrite("C:\\Users\\Reza\\Desktop\\testing-grayscale\\colortograyscale.jpg", tipsDST);
+        imageCodecs.imwrite("C:\\Users\\Reza\\Desktop\\colortograyscale-2.jpg", tipsDST);
+        return tipsDST;
+    }
+    */
+    
+    /*
+    public void checkGrayscalePatternsOfSlices() {
+            
+            //Mat img = Imgcodecs.imread(imgs[0], Imgcodecs.IMREAD_COLOR);
+            //Mat image = HighGui.toBufferedImage("faces/s1/1.pgm", 0);
+            Mat[] imgMat = new Mat[13];
+            
+            for(int imgMatIndex = 0 ; imgMatIndex < 13 ; imgMatIndex++){
+                try {
+                    imgMat[imgMatIndex] = BufferedImage2Mat(imgs[imgMatIndex]);
+                } catch (IOException ex) {
+                    Logger.getLogger(TestClass.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            
+            Mat mat1 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-1.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat2 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-2.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat3 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-3.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat4 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-4.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat5 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-5.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            //Mat mat6 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-6.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            
+            
+            for(int imgMatIndex = 0 ; imgMatIndex < 13 ; imgMatIndex++){
+                if(imgMat[imgMatIndex] != null){
+                    drawRecOverSignsMatch(mat1, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat2, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat3, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat4, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat5, imgMat[imgMatIndex], imgMatIndex);
+                    //drawRecOverSignsMatch(mat6, imgMat[imgMatIndex], imgMatIndex);
+                }
+            
+            
+            }
+        }
+    */
+    
+    public void printCouponImageGrayScale(Mat imgSrc){
+        
+        Imgcodecs imageCodecs = new Imgcodecs();
+        //Writing the image
+        imageCodecs.imwrite("C:\\Users\\Reza\\Desktop\\colortograyscale-2.jpg", imgSrc);
+        
+    }
+    
+    public void printSelectedSliceOnDesktop(BufferedImage  selectedBuffImage){
+        
+        Mat imgSrc = null;
+        
+        //making a .jpg-picture of desired buffimagepattern on desktop
+        try {
+             imgSrc = BufferedImage2Mat(selectedBuffImage);
+        } catch (IOException ex) {
+             Logger.getLogger(TestClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Imgcodecs imageCodecs = new Imgcodecs();
+        //Writing the image
+        imageCodecs.imwrite("C:\\Users\\Reza\\Desktop\\patternslice.jpg", imgSrc);
+    }
 }
