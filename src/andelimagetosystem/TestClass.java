@@ -109,6 +109,10 @@ public class TestClass {
         private double imageWidthDpi = 0.0;
         private double imageHeightDpi = 0.0;
         
+        private String[] andelArray = new String[13];
+        
+        private Mat[] imgMat = new Mat[13];
+        //private BufferedImage theImageToCrop = null;
         
 	
 	public void runTestClass(Stage primaryStage1) {
@@ -120,14 +124,17 @@ public class TestClass {
 		
 		 //Mat img = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips-7.jpg", Imgcodecs.IMREAD_COLOR);
                  
-                 filePath = "C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips-2.jpg";
-                 //filePath = "C:\\Users\\Reza\\Desktop\\testtips-filer\\stryktips-12.jpg";
+                 //filePath = "C:\\Users\\Reza\\Desktop\\testtips-filer\\europatips\\europatips-10.jpg";
+                 filePath = "C:\\Users\\Reza\\Desktop\\testtips-filer\\stryktips\\stryktips-13.jpg";
                  //filePath = "C:\\Users\\Reza\\Desktop\\testing-image-changeDPI\\stryktips-1-changed.jpg";
                  
 		 //Mat imgOrg = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_ANYCOLOR);
                  Mat img = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_GRAYSCALE);
 		 
                  //Mat img = makeCouponImageGrayScale(imgOrg);
+                 
+                 adjustSystemImageWidthTo660(img);
+                 
                  
 		    if(img.empty())
 				try {
@@ -169,11 +176,11 @@ public class TestClass {
 		*/
 		
                 
-		Mat tpl8 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(1).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-		Mat tpl9 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(2).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-		Mat tpl10 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(3).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-		Mat tpl11 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(4).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-		Mat tpl12 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13(5).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+		Mat tpl8 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13\\1-13(1).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+		Mat tpl9 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13\\1-13(2).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+		Mat tpl10 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13\\1-13(3).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+		Mat tpl11 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13\\1-13(4).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+		Mat tpl12 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1-13\\1-13(5).jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
 		
 		
 		//drawRecOverMatches(tpl8, img);
@@ -184,6 +191,10 @@ public class TestClass {
 		cutRecOver1To13Match(tpl12, img);
 		
 	    Image tmpImg = HighGui.toBufferedImage(img);
+            
+            for(int i = 0 ; i < andelArray.length ; i++){
+                andelArray[i] = "empty";
+            }
             
             
             //theRectangleCutImage = (BufferedImage) HighGui.toBufferedImage(img);
@@ -222,6 +233,7 @@ public class TestClass {
             imgDisplay.setGraphic(imageView);
             //imgDisplay.setPrefSize(20, 20);
             //imgDisplay.setMaxSize(30, 30);
+            
 	    
 	    createStage();
 	    sliceTheMatchesWithPatterns();
@@ -232,11 +244,38 @@ public class TestClass {
                 //changeImageDPI();
             }
             
-            checkPatternsOfSlices();
+                        
+            checkPattern_1X2_OfSlices();
+            checkPattern_1X_OfSlices();
             
             //testNewRonaldoTemplateMatching();
+            
+            fillMatchesInSlices();
+            
+            printAndelArrayOnTerminal();
+            
 	}
 	
+        public void adjustSystemImageWidthTo660(Mat img){
+            
+            MatOfByte matOfByte = new MatOfByte();
+	            Imgcodecs.imencode(".jpg", img, matOfByte);
+	            //Storing the encoded Mat in a byte array
+	            byte[] byteArray = matOfByte.toArray();
+	            //Preparing the Buffered Image
+	            InputStream in = new ByteArrayInputStream(byteArray);
+	            BufferedImage buffImage = null;
+	            try {
+					buffImage = ImageIO.read(in);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            
+            System.out.println("In-adjust----buffImage.getHeight(): " + buffImage.getHeight());
+            //System.out.println("----buffImage.getWidth(): " + buffImage.getWidth());
+                                   
+        }
         	
 	public void cutRecOver1To13Match(Mat tpl, Mat img){
 		
@@ -298,15 +337,16 @@ public class TestClass {
 					e.printStackTrace();
 				}
 	            
-	            BufferedImage image = null;
+	            //BufferedImage image = null;
 	            
 	            try {
-	            	image = cropImage(bufImage,point1,point2);
-	            	Mat newMatImage = BufferedImage2Mat(image);
+	            	bufImage = cropImage(bufImage,point1,point2);
+	            	Mat newMatImage = BufferedImage2Mat(bufImage);
                         theRectangleCutImage = (BufferedImage) HighGui.toBufferedImage(newMatImage);
                         
                         System.out.println("ORG----theRectangleCutImage.getHeight(): " + theRectangleCutImage.getHeight());
                         System.out.println("ORG----theRectangleCutImage.getWidth(): " + theRectangleCutImage.getWidth());
+                        
                         
                         if(theRectangleCutImage.getHeight() < 660){
                             int heightDifference = 660 - theRectangleCutImage.getHeight();
@@ -477,7 +517,7 @@ public class TestClass {
         
         System.out.println("Sub-images have been created.");
             
-        //printSelectedSliceOnDesktop(imgs[1]);
+        //printSelectedSliceOnDesktop(imgs[4]);
     }
 		
 	public BufferedImage cropImage(BufferedImage image, Point point1, Point point2)
@@ -517,12 +557,10 @@ public class TestClass {
             return Imgcodecs.imdecode(new MatOfByte(byteArrayOutputStream.toByteArray()), Imgcodecs.IMREAD_GRAYSCALE);
 	}
         
-        public void checkPatternsOfSlices() {
+        public void checkPattern_1X2_OfSlices() {
             
-            //Mat img = Imgcodecs.imread(imgs[0], Imgcodecs.IMREAD_COLOR);
-            //Mat image = HighGui.toBufferedImage("faces/s1/1.pgm", 0);
-            Mat[] imgMat = new Mat[13];
-            
+            String patternText = "1X2";
+                       
             for(int imgMatIndex = 0 ; imgMatIndex < 13 ; imgMatIndex++){
                 try {
                     imgMat[imgMatIndex] = BufferedImage2Mat(imgs[imgMatIndex]);
@@ -532,55 +570,65 @@ public class TestClass {
             }
             
             
-            Mat mat1 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-1.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-            Mat mat2 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-2.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-            Mat mat3 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-3.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-            Mat mat4 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-4.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-            Mat mat5 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-5.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-            Mat mat6 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-6.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-            Mat mat7 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-7.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
-            Mat mat8 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-8.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat1 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-1.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat2 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-2.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat3 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-3.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat4 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-4.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat5 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-5.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat6 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-6.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat7 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-7.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat8 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-8.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
             
-            Mat mat9 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-9.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat9 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-9.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat10 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-10.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat11 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-11.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat12 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-12.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat13 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-13.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat14 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-14.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            
+            Mat mat15 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-15.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat16 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-16.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat17 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-17.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat18 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-18.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat19 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-19.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            
+            Mat mat20 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-20.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat21 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-21.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
             
             for(int imgMatIndex = 0 ; imgMatIndex < 13 ; imgMatIndex++){
                 if(imgMat[imgMatIndex] != null){
                     
-                    drawRecOverSignsMatch(mat1, imgMat[imgMatIndex], imgMatIndex);
-                    drawRecOverSignsMatch(mat2, imgMat[imgMatIndex], imgMatIndex);
-                    drawRecOverSignsMatch(mat3, imgMat[imgMatIndex], imgMatIndex);
-                    drawRecOverSignsMatch(mat4, imgMat[imgMatIndex], imgMatIndex);
-                    drawRecOverSignsMatch(mat5, imgMat[imgMatIndex], imgMatIndex);
-                    drawRecOverSignsMatch(mat6, imgMat[imgMatIndex], imgMatIndex);
-                    drawRecOverSignsMatch(mat7, imgMat[imgMatIndex], imgMatIndex);
-                    drawRecOverSignsMatch(mat8, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat1, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat2, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat3, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat4, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat5, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat6, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat7, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat8, imgMat[imgMatIndex], imgMatIndex, patternText);
                     
-                    drawRecOverSignsMatch(mat9, imgMat[imgMatIndex], imgMatIndex);
+                    drawRecOverSignsMatch(mat9, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat10, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat11, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat12, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat13, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat14, imgMat[imgMatIndex], imgMatIndex, patternText);
                     
-                    //drawRecOverSignsMatch(mat6, imgMat[imgMatIndex], imgMatIndex);
-                    //drawRecOverSignsMatch(mat7, imgMat[imgMatIndex], imgMatIndex,0.92);
-                    //drawRecOverSignsMatch(mat8, imgMat[imgMatIndex], imgMatIndex, 0.92);
-                    //////drawRecOverSignsMatch(mat9, imgMat[imgMatIndex], imgMatIndex, 0.95);
-                    //drawRecOverSignsMatch(mat10, imgMat[imgMatIndex], imgMatIndex, 0.925);
-                    //////drawRecOverSignsMatch(mat11, imgMat[imgMatIndex], imgMatIndex,0.955);
-                    //////drawRecOverSignsMatch(mat12, imgMat[imgMatIndex], imgMatIndex,0.95);
-                    //////drawRecOverSignsMatch(mat13, imgMat[imgMatIndex], imgMatIndex, 0.95);
+                    drawRecOverSignsMatch(mat15, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat16, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat17, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat18, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat19, imgMat[imgMatIndex], imgMatIndex, patternText);
                     
-                    //drawRecOverSignsMatch(mat14, imgMat[imgMatIndex], imgMatIndex, 0.7);
-                    //drawRecOverSignsMatch(mat15, imgMat[imgMatIndex], imgMatIndex, 0.9275);
+                    drawRecOverSignsMatch(mat20, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat21, imgMat[imgMatIndex], imgMatIndex, patternText);
                     
-                    //////drawRecOverSignsMatch(mat16, imgMat[imgMatIndex], imgMatIndex, 0.9225);
-                    //////drawRecOverSignsMatch(mat17, imgMat[imgMatIndex], imgMatIndex, 0.95);
-                    
-                    //////drawRecOverSignsMatch(mat18, imgMat[imgMatIndex], imgMatIndex, 0.95);
-                    
-                    //////drawRecOverSignsMatch(mat19, imgMat[imgMatIndex], imgMatIndex, 0.95);
-                }
+                    }
             
             }
         }
         
-        public void drawRecOverSignsMatch(Mat tpl, Mat img, int matIndex){
+        public void drawRecOverSignsMatch(Mat tpl, Mat img, int matIndex, String patternText){
 		
             
 	    if(tpl.empty())
@@ -595,7 +643,6 @@ public class TestClass {
                         
 	    Mat result = new Mat();
 	    Imgproc.matchTemplate(img, tpl,result,Imgproc.TM_CCOEFF_NORMED);//Template Matching
-	    //Imgproc.matchTemplate(img, tpl,result,Imgproc.TM_SQDIFF_NORMED);//Template Matching
 	    
 	    Imgproc.threshold(result, result, 0.1, 1, Imgproc.THRESH_TOZERO);  
             
@@ -603,40 +650,23 @@ public class TestClass {
             double threshold = 0.98;           
 	    
 	    double maxval;
-	    //Mat dst;
-	    //int q = 1;
-	    
-	    //while(true) 
-	    //while(q == 1) 	
-	    //{
+            
 	        Core.MinMaxLocResult maxr = Core.minMaxLoc(result);
 	        Point maxp = maxr.maxLoc;
 	        maxval = maxr.maxVal;
-	        //Point maxop = new Point(maxp.x + tpl.width(), maxp.y + tpl.height());
-	        //dst = img.clone();
-                
-	        //System.out.println("maxval= " + maxval);
-                //System.out.println("threshold= " + threshold);
                 
 	        if(maxval >= threshold)
 	        {
 	            System.out.println("in drawRecOverSignsMatch...");
 
-                    System.out.println("The index of slice is: " + matIndex);
+                    //System.out.println("The index of slice is: " + matIndex);
+                    
+                    andelArray[matIndex] = patternText;
                     
 	            Imgproc.rectangle(img, maxp, new Point((maxp.x) + tpl.cols(),
 	                    (maxp.y+0) + tpl.rows()), new Scalar(0, 0, 0),2);
 	            
-	            /*
-	            //Drawing a Rectangle
-	            Point point1 = maxp;
-	            Point point2 = new Point((maxp.x) + tpl.cols(),
-	                    (maxp.y+0) + tpl.rows());// change maxp.+1.99999999999991484587 to lower or higher slice-height
-	            Scalar color = new Scalar(0, 0, 0);
-	            int thickness = -1;
-	            */
-                    //Imgcodecs.imwrite("C:\\Users\\Reza\\Desktop\\output.jpg", img);//save image
-                    
+	                                
                 try {
  
                     imgs[matIndex] = Mat2BufferedImage(img);
@@ -644,8 +674,50 @@ public class TestClass {
                     Logger.getLogger(TestClass.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 }
-                fillMatchesInSlices();
-            //}
+                            
+        }
+        
+        public void checkPattern_1X_OfSlices() {
+            
+            String patternText = "1X";         
+            
+            Mat mat1 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-1.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat2 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-2.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat3 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-3.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat4 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-4.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat5 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-5.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            
+            Mat mat6 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-6.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat7 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-7.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat8 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-8.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat9 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-9.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat10 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-10.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat11 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-11.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat12 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-12.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            Mat mat13 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x\\1x-13.jpg", Imgcodecs.IMREAD_GRAYSCALE);//template image
+            
+            
+            for(int imgMatIndex = 0 ; imgMatIndex < 13 ; imgMatIndex++){
+                if(imgMat[imgMatIndex] != null){
+                    
+                    drawRecOverSignsMatch(mat1, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat2, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat3, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat4, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat5, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    
+                    drawRecOverSignsMatch(mat6, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat7, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat8, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat9, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat10, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat11, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat12, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    drawRecOverSignsMatch(mat13, imgMat[imgMatIndex], imgMatIndex, patternText);
+                    
+                }
+            
+            }
         }
         
         public void fillMatchesInSlices(){
@@ -1000,12 +1072,12 @@ public class TestClass {
             }
             
             
-            Mat mat1 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-1.jpg", Imgcodecs.IMREAD_COLOR);//template image
-            Mat mat2 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-2.jpg", Imgcodecs.IMREAD_COLOR);//template image
-            Mat mat3 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-3.jpg", Imgcodecs.IMREAD_COLOR);//template image
-            Mat mat4 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-4.jpg", Imgcodecs.IMREAD_COLOR);//template image
-            Mat mat5 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-5.jpg", Imgcodecs.IMREAD_COLOR);//template image
-            //Mat mat6 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2-6.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat1 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-1.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat2 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-2.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat3 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-3.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat4 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-4.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            Mat mat5 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-5.jpg", Imgcodecs.IMREAD_COLOR);//template image
+            //Mat mat6 = Imgcodecs.imread("C:\\Users\\Reza\\Desktop\\testtips-filer\\1x2\\1x2-6.jpg", Imgcodecs.IMREAD_COLOR);//template image
             
             
             for(int imgMatIndex = 0 ; imgMatIndex < 13 ; imgMatIndex++){
@@ -1045,5 +1117,11 @@ public class TestClass {
         Imgcodecs imageCodecs = new Imgcodecs();
         //Writing the image
         imageCodecs.imwrite("C:\\Users\\Reza\\Desktop\\patternslice.jpg", imgSrc);
+    }
+    
+    public void printAndelArrayOnTerminal(){
+        for(int i = 0 ; i <andelArray.length ; i++){
+            System.out.println("At match " + (i+1) + ", the pattern is= " + andelArray[i]);
+        }
     }
 }
